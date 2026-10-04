@@ -1,17 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Afuom HQ | Remote Farm Operations OS</title>
+  <!-- Favicon: Geometric Sprout Mark -->
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232d5a3f'><path d='M12 2a10 10 0 0 1 10 10c0 5.5-4.5 10-10 10S2 17.5 2 12A10 10 0 0 1 12 2zm0 4c-3.3 0-6 2.7-6 6 0 2.2 1.2 4.1 3 5.2V15c0-1.7 1.3-3 3-3s3 1.3 3 3v2.2c1.8-1.1 3-3 3-5.2 0-3.3-2.7-6-6-6z'/></svg>" />
   <!-- Google Fonts: IBM Plex Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
-  <!-- Font Awesome 6 Real Static Icons -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+    rel="stylesheet">
+  <!-- Font Awesome 6 Static Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <link rel="stylesheet" href="/styles.css" />
 </head>
+
 <body>
 
   <!-- App Layout Shell -->
@@ -19,21 +26,34 @@
 
     <!-- Mobile Header Bar (Visible on Mobile Viewports) -->
     <header class="mobile-header">
-      <button class="mobile-toggle" onclick="toggleMobileSidebar()">
+      <button class="mobile-toggle" onclick="toggleMobileSidebar()" aria-label="Toggle Navigation">
         <i class="fa-solid fa-bars"></i>
       </button>
-      <div style="display: flex; align-items: center; gap: 8px;">
-        <div class="brand-badge" style="padding: 4px 8px; font-size: 12px;"><i class="fa-solid fa-leaf"></i> AHQ</div>
-        <div class="brand-title" style="font-size: 16px;">Afuom HQ</div>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div class="brand-badge">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v20M12 12L4 6M12 16l8-6M12 8l8-4M12 16L4 10" />
+          </svg>
+        </div>
+        <div class="brand-title">Afuom HQ</div>
       </div>
     </header>
+
+    <!-- Sidebar Overlay Backdrop for Mobile -->
+    <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="toggleMobileSidebar()"></div>
 
     <!-- Full-Height Left Sidebar Navigation -->
     <aside class="app-sidebar" id="app-sidebar">
       <div class="sidebar-top">
         <!-- Brand Logo & Header -->
         <div class="sidebar-brand">
-          <div class="brand-badge"><i class="fa-solid fa-leaf"></i> AHQ</div>
+          <div class="brand-badge">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v20M12 12L4 6M12 16l8-6M12 8l8-4M12 16L4 10" />
+            </svg>
+          </div>
           <div>
             <div class="brand-title">Afuom HQ</div>
             <div class="brand-sub">Farm Operations OS</div>
@@ -65,14 +85,19 @@
           <!-- 1. AGRONOMIST MENU -->
           <nav id="agronomist-nav-group" class="role-nav-group">
             <div class="sidebar-nav-title">Agronomist Views</div>
-            <button class="nav-item active" data-tab="command-center" onclick="switchSubTab('agronomist', 'command-center')">
+            <button class="nav-item active" data-tab="command-center"
+              onclick="switchSubTab('agronomist', 'command-center')">
               <i class="fa-solid fa-gauge-high text-green"></i> Command Center
             </button>
             <button class="nav-item" data-tab="plot-chemistry" onclick="switchSubTab('agronomist', 'plot-chemistry')">
               <i class="fa-solid fa-layer-group text-green"></i> Plot Chemistry
             </button>
-            <button class="nav-item" data-tab="protocol-library" onclick="switchSubTab('agronomist', 'protocol-library')">
+            <button class="nav-item" data-tab="protocol-library"
+              onclick="switchSubTab('agronomist', 'protocol-library')">
               <i class="fa-solid fa-book-bookmark text-green"></i> Protocol Playbooks
+            </button>
+            <button class="nav-item" data-tab="stock-inventory" onclick="switchSubTab('agronomist', 'stock-inventory')">
+              <i class="fa-solid fa-boxes-stacked text-green"></i> Stock & Inputs Ledger
             </button>
             <button class="nav-item" data-tab="inspections" onclick="switchSubTab('agronomist', 'inspections')">
               <i class="fa-solid fa-clipboard-check text-green"></i> Inspection Log
@@ -82,11 +107,15 @@
           <!-- 2. FARM MANAGER MENU -->
           <nav id="manager-nav-group" class="role-nav-group" style="display: none;">
             <div class="sidebar-nav-title">Manager Views</div>
-            <button class="nav-item active" data-tab="command-console" onclick="switchSubTab('manager', 'command-console')">
+            <button class="nav-item active" data-tab="command-console"
+              onclick="switchSubTab('manager', 'command-console')">
               <i class="fa-solid fa-gauge-high text-blue"></i> Operations Console
             </button>
             <button class="nav-item" data-tab="alerts-triage" onclick="switchSubTab('manager', 'alerts-triage')">
               <i class="fa-solid fa-triangle-exclamation text-red"></i> Emergency Alerts
+            </button>
+            <button class="nav-item" data-tab="machinery-status" onclick="switchSubTab('manager', 'machinery-status')">
+              <i class="fa-solid fa-tractor text-blue"></i> Shared Machinery
             </button>
             <button class="nav-item" data-tab="photo-audits" onclick="switchSubTab('manager', 'photo-audits')">
               <i class="fa-solid fa-camera text-blue"></i> Photo Audit Queue
@@ -113,7 +142,8 @@
           <!-- 4. FARM OWNER MENU -->
           <nav id="owner-nav-group" class="role-nav-group" style="display: none;">
             <div class="sidebar-nav-title">Owner Views</div>
-            <button class="nav-item active" data-tab="executive-dashboard" onclick="switchSubTab('owner', 'executive-dashboard')">
+            <button class="nav-item active" data-tab="executive-dashboard"
+              onclick="switchSubTab('owner', 'executive-dashboard')">
               <i class="fa-solid fa-chart-line text-purple"></i> Executive Dashboard
             </button>
             <button class="nav-item" data-tab="digital-timeline" onclick="switchSubTab('owner', 'digital-timeline')">
@@ -143,11 +173,11 @@
     <!-- Main Workspace Area -->
     <main class="app-workspace">
 
-      <!-- Top Welcome Header Bar -->
+      <!-- Top Workspace Header Bar -->
       <header class="workspace-header">
         <div>
           <h1 class="welcome-title" id="welcome-title">Welcome back, Dr. Lobos!</h1>
-          <p class="welcome-sub" id="welcome-sub">Multi-Farm Agronomic Command Center — John's Tomato Farm (Dodowa)</p>
+          <p class="welcome-sub" id="welcome-sub">Multi-Farm Agronomic Command Center</p>
         </div>
       </header>
 
@@ -175,24 +205,25 @@
 
               <div class="grid-4" id="agronomist-summary-grid">
                 <div class="card">
-                  <div style="font-size: 11px; color: #a7f3d0; font-weight: 700;">Active Farms Managed</div>
-                  <div style="font-size: 26px; font-weight: 900; margin-top: 2px;" id="stat-farms">2</div>
-                  <div style="font-size: 10px; color: #d1d5db;" id="stat-farms-breakdown">1 Healthy · 1 Attention</div>
+                  <div style="font-weight: 600; color: var(--text-muted);">Active Farms Managed</div>
+                  <div class="kpi-figure" id="stat-farms">2</div>
+                  <div style="color: var(--text-muted);" id="stat-farms-breakdown">1 Healthy · 1 Attention</div>
                 </div>
                 <div class="card">
-                  <div style="font-size: 11px; color: #a7f3d0; font-weight: 700;">Protocol Library</div>
-                  <div style="font-size: 26px; font-weight: 900; margin-top: 2px;" id="stat-protocols">4</div>
-                  <div style="font-size: 10px; color: #34d399;">Standardized Playbooks</div>
+                  <div style="font-weight: 600; color: var(--text-muted);">Protocol Library</div>
+                  <div class="kpi-figure" id="stat-protocols">4</div>
+                  <div style="color: var(--success); font-weight: 500;">Standardized Playbooks</div>
                 </div>
                 <div class="card">
-                  <div style="font-size: 11px; color: #a7f3d0; font-weight: 700;">Active Dispatched Tasks</div>
-                  <div style="font-size: 26px; font-weight: 900; margin-top: 2px;" id="stat-tasks">3</div>
-                  <div style="font-size: 10px; color: #fde68a;" id="stat-tasks-breakdown">1 Pending Proof · 1 Scheduled</div>
+                  <div style="font-weight: 600; color: var(--text-muted);">Active Dispatched Tasks</div>
+                  <div class="kpi-figure" id="stat-tasks">3</div>
+                  <div style="color: var(--warning); font-weight: 500;" id="stat-tasks-breakdown">1 Pending Proof · 1
+                    Scheduled</div>
                 </div>
                 <div class="card">
-                  <div style="font-size: 11px; color: #a7f3d0; font-weight: 700;">Inspections Completed</div>
-                  <div style="font-size: 26px; font-weight: 900; margin-top: 2px;" id="stat-inspections">2</div>
-                  <div style="font-size: 10px; color: #c084fc;">1-5 Star Ratings Logged</div>
+                  <div style="font-weight: 600; color: var(--text-muted);">Inspections Completed</div>
+                  <div class="kpi-figure" id="stat-inspections">2</div>
+                  <div style="color: var(--blue); font-weight: 500;">1-5 Star Ratings Logged</div>
                 </div>
               </div>
             </div>
@@ -208,37 +239,47 @@
                 <div class="card">
                   <div class="card-header">
                     <div>
-                      <span class="badge badge-amber">Attention Needed</span>
-                      <div class="card-title" style="margin-top: 4px;">John's Tomato Farm</div>
-                      <div style="font-size: 11px; color: #a7f3d0;"><i class="fa-solid fa-location-dot"></i> Dodowa, Greater Accra</div>
+                      <span class="badge badge-amber"><i class="fa-solid fa-triangle-exclamation"></i> Attention
+                        Needed</span>
+                      <div class="card-title" style="margin-top: 6px;">John's Tomato Farm</div>
+                      <div style="color: var(--text-muted); margin-top: 2px;"><i class="fa-solid fa-location-dot"></i>
+                        Dodowa, Greater Accra</div>
                     </div>
                   </div>
-                  <div style="font-size: 11.5px; line-height: 1.6; color: #e5e7eb; margin: 8px 0;">
-                    <div><strong>Size:</strong> 2.5 Acres · 8,000 Plants</div>
-                    <div><strong>Crop:</strong> Fresh Market Tomato (Ananya F1)</div>
-                    <div><strong>Manager:</strong> Kwame Mensah</div>
-                    <div><strong>Agronomic Note:</strong> Plot C potassium drawdown during fruit sizing stage.</div>
+                  <div class="ruled-list" style="margin: 12px 0;">
+                    <div class="ruled-list-item"><span>Size & Density:</span><strong>2.5 Acres · 8,000 Plants</strong>
+                    </div>
+                    <div class="ruled-list-item"><span>Crop Variety:</span><strong>Fresh Market Tomato (Ananya
+                        F1)</strong></div>
+                    <div class="ruled-list-item"><span>Farm Manager:</span><strong>Kwame Mensah</strong></div>
+                    <div class="ruled-list-item"><span>Agronomic Note:</span><strong style="color: var(--warning);">Plot
+                        C potassium drawdown</strong></div>
                   </div>
-                  <button class="btn btn-secondary" style="font-size: 11px; width: 100%; justify-content: center;" onclick="switchSubTab('agronomist', 'plot-chemistry')">
+                  <button class="btn btn-secondary" style="width: 100%; justify-content: center;"
+                    onclick="switchSubTab('agronomist', 'plot-chemistry')">
                     Inspect Soil & Plot Metrics →
                   </button>
                 </div>
-
                 <div class="card">
                   <div class="card-header">
                     <div>
-                      <span class="badge badge-green">Healthy Vigor</span>
-                      <div class="card-title" style="margin-top: 4px;">Volta Basin Organic Farm</div>
-                      <div style="font-size: 11px; color: #a7f3d0;"><i class="fa-solid fa-location-dot"></i> Ada Foah, Volta Region</div>
+                      <span class="badge badge-green"><i class="fa-solid fa-circle-check"></i> Healthy Vigor</span>
+                      <div class="card-title" style="margin-top: 6px;">Volta Basin Organic Farm</div>
+                      <div style="color: var(--text-muted); margin-top: 2px;"><i class="fa-solid fa-location-dot"></i>
+                        Ada Foah, Volta Region</div>
                     </div>
                   </div>
-                  <div style="font-size: 11.5px; line-height: 1.6; color: #e5e7eb; margin: 8px 0;">
-                    <div><strong>Size:</strong> 4.0 Acres · 12,000 Plants</div>
-                    <div><strong>Crop:</strong> Habanero Pepper & Sweet Bell</div>
-                    <div><strong>Manager:</strong> Emmanuel Tetteh</div>
-                    <div><strong>Agronomic Note:</strong> Vegetative growth index optimal. Drip lines running smoothly.</div>
+                  <div class="ruled-list" style="margin: 12px 0;">
+                    <div class="ruled-list-item"><span>Size & Density:</span><strong>4.0 Acres · 12,000 Plants</strong>
+                    </div>
+                    <div class="ruled-list-item"><span>Crop Variety:</span><strong>Habanero Pepper & Sweet Bell</strong>
+                    </div>
+                    <div class="ruled-list-item"><span>Farm Manager:</span><strong>Emmanuel Tetteh</strong></div>
+                    <div class="ruled-list-item"><span>Agronomic Note:</span><strong
+                        style="color: var(--success);">Vegetative growth optimal</strong></div>
                   </div>
-                  <button class="btn btn-secondary" style="font-size: 11px; width: 100%; justify-content: center;" onclick="switchSubTab('agronomist', 'protocol-library')">
+                  <button class="btn btn-secondary" style="width: 100%; justify-content: center;"
+                    onclick="switchSubTab('agronomist', 'protocol-library')">
                     View Assigned Protocols →
                   </button>
                 </div>
@@ -251,12 +292,19 @@
             <div class="panel">
               <div class="panel-header">
                 <div class="panel-title">
-                  <i class="fa-solid fa-layer-group text-green"></i> Plot Chemistry & Lifecycle Tracker — John's Tomato Farm
+                  <i class="fa-solid fa-layer-group text-green"></i> Plot Chemistry & Lifecycle Tracker — John's Tomato
+                  Farm
                 </div>
-                <select id="farm-selector" style="width: auto; margin: 0; padding: 4px 10px; font-size: 11px;" onchange="loadFarmPlots(this.value)">
-                  <option value="f-1">John's Tomato Farm (Dodowa)</option>
-                  <option value="f-2">Volta Basin Organic Farm (Ada)</option>
-                </select>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                  <a href="/api/export/soil-csv" download class="btn btn-secondary">
+                    <i class="fa-solid fa-file-csv"></i> Export Soil History CSV
+                  </a>
+                  <select id="farm-selector" style="width: auto; margin: 0; padding: 6px 12px;"
+                    onchange="loadFarmPlots(this.value)">
+                    <option value="f-1">John's Tomato Farm (Dodowa)</option>
+                    <option value="f-2">Volta Basin Organic Farm (Ada)</option>
+                  </select>
+                </div>
               </div>
 
               <div class="grid-4" id="plots-container"></div>
@@ -276,6 +324,19 @@
               </div>
 
               <div class="grid-2" id="protocols-container"></div>
+            </div>
+          </div>
+
+          <!-- Stock Inventory Sub-Tab -->
+          <div id="agronomist-stock-inventory" class="sub-tab-content" style="display: none;">
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <i class="fa-solid fa-boxes-stacked text-green"></i> Farm Stock & Chemical Input Inventory Ledger
+                </div>
+              </div>
+
+              <div class="grid-3" id="inventory-container"></div>
             </div>
           </div>
 
@@ -304,32 +365,33 @@
                 <div class="panel-title">
                   <i class="fa-solid fa-user-tie text-blue"></i> Farm Manager Command Console — Kwame Mensah
                 </div>
-                <span style="font-size: 11px; color: #bfdbfe;"><i class="fa-solid fa-location-dot"></i> John's Tomato Farm (Dodowa)</span>
+                <span style="color: var(--text-muted); font-weight: 500;"><i class="fa-solid fa-location-dot"></i>
+                  John's Tomato Farm (Dodowa)</span>
               </div>
 
               <div class="grid-4">
                 <div class="card">
-                  <div style="font-size: 11px; color: #93c5fd; font-weight: 700;">Pending Photo Audits</div>
-                  <div style="font-size: 26px; font-weight: 900; margin-top: 2px; color: #fde68a;" id="mgr-stat-pending">1</div>
-                  <div style="font-size: 10px; color: #d1d5db;">Awaiting Verification</div>
+                  <div style="font-weight: 600; color: var(--text-muted);">Pending Photo Audits</div>
+                  <div class="kpi-figure" style="color: var(--warning);" id="mgr-stat-pending">1</div>
+                  <div style="color: var(--text-muted);">Awaiting Verification</div>
                 </div>
 
                 <div class="card">
-                  <div style="font-size: 11px; color: #93c5fd; font-weight: 700;">Verified Tasks Today</div>
-                  <div style="font-size: 26px; font-weight: 900; margin-top: 2px; color: #6ee7b7;" id="mgr-stat-verified">1</div>
-                  <div style="font-size: 10px; color: #34d399;">Audit Records Posted</div>
+                  <div style="font-weight: 600; color: var(--text-muted);">Verified Tasks Today</div>
+                  <div class="kpi-figure" style="color: var(--success);" id="mgr-stat-verified">1</div>
+                  <div style="color: var(--success);">Audit Records Posted</div>
                 </div>
 
                 <div class="card">
-                  <div style="font-size: 11px; color: #93c5fd; font-weight: 700;">Ground Crew Active</div>
-                  <div style="font-size: 26px; font-weight: 900; margin-top: 2px;" id="mgr-stat-workers">4</div>
-                  <div style="font-size: 10px; color: #6ee7b7;">3 Active On Field</div>
+                  <div style="font-weight: 600; color: var(--text-muted);">Ground Crew Active</div>
+                  <div class="kpi-figure" id="mgr-stat-workers">4</div>
+                  <div style="color: var(--success);">3 Active On Field</div>
                 </div>
 
                 <div class="card">
-                  <div style="font-size: 11px; color: #93c5fd; font-weight: 700;">Active Field Alerts</div>
-                  <div style="font-size: 26px; font-weight: 900; margin-top: 2px; color: #fca5a5;" id="mgr-stat-alerts">2</div>
-                  <div style="font-size: 10px; color: #ef4444;">Requires Manager Triage</div>
+                  <div style="font-weight: 600; color: var(--text-muted);">Active Field Alerts</div>
+                  <div class="kpi-figure" style="color: var(--danger);" id="mgr-stat-alerts">2</div>
+                  <div style="color: var(--danger);">Requires Manager Triage</div>
                 </div>
               </div>
             </div>
@@ -344,32 +406,39 @@
               <div class="grid-3">
                 <div class="card">
                   <div class="card-header">
-                    <span class="badge badge-green">Morning Shift (07:00 - 12:00)</span>
+                    <span class="badge badge-green"><i class="fa-solid fa-sun"></i> Morning Shift (07:00 - 12:00)</span>
                   </div>
-                  <div style="font-size: 12px; line-height: 1.6; color: #e5e7eb;">
-                    <div><i class="fa-solid fa-check text-green"></i> Fertigation Injection (Plot B): <strong>Completed</strong></div>
-                    <div><i class="fa-solid fa-check text-green"></i> Line Flush (Plot A): <strong>Completed</strong></div>
-                    <div><i class="fa-solid fa-spinner text-amber"></i> Pest Sticky Trap Scout (Plot C): <strong>In Progress</strong></div>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <span class="badge badge-amber">Afternoon Shift (12:00 - 17:00)</span>
-                  </div>
-                  <div style="font-size: 12px; line-height: 1.6; color: #e5e7eb;">
-                    <div><i class="fa-solid fa-clock text-amber"></i> Nursery Tunnel Shade Mesh Check: <strong>Pending</strong></div>
-                    <div><i class="fa-solid fa-clock text-amber"></i> Soil Moisture Probing (Plot A & B): <strong>Scheduled</strong></div>
+                  <div class="ruled-list">
+                    <div class="ruled-list-item"><span>Fertigation Injection (Plot B):</span><strong
+                        style="color: var(--success);"><i class="fa-solid fa-check"></i> Completed</strong></div>
+                    <div class="ruled-list-item"><span>Line Flush (Plot A):</span><strong
+                        style="color: var(--success);"><i class="fa-solid fa-check"></i> Completed</strong></div>
+                    <div class="ruled-list-item"><span>Pest Sticky Trap Scout (Plot C):</span><strong
+                        style="color: var(--warning);"><i class="fa-solid fa-spinner"></i> In Progress</strong></div>
                   </div>
                 </div>
 
                 <div class="card">
                   <div class="card-header">
-                    <span class="badge badge-blue">Field Security & Equipment</span>
+                    <span class="badge badge-amber"><i class="fa-solid fa-cloud-sun"></i> Afternoon Shift (12:00 -
+                      17:00)</span>
                   </div>
-                  <div style="font-size: 12px; line-height: 1.6; color: #e5e7eb;">
-                    <div><i class="fa-solid fa-shield text-blue"></i> Drip Line Pump Pressure: <strong>1.7 Bar (Normal)</strong></div>
-                    <div><i class="fa-solid fa-shield text-blue"></i> Venturi Injector Flow: <strong>2.4 L/min</strong></div>
+                  <div class="ruled-list">
+                    <div class="ruled-list-item"><span>Nursery Tunnel Shade Mesh:</span><strong
+                        style="color: var(--warning);"><i class="fa-solid fa-clock"></i> Pending</strong></div>
+                    <div class="ruled-list-item"><span>Soil Moisture Probing (Plot A & B):</span><strong
+                        style="color: var(--warning);"><i class="fa-solid fa-clock"></i> Scheduled</strong></div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                    <span class="badge badge-blue"><i class="fa-solid fa-shield"></i> Field Security & Equipment</span>
+                  </div>
+                  <div class="ruled-list">
+                    <div class="ruled-list-item"><span>Drip Line Pump Pressure:</span><strong>1.7 Bar (Normal)</strong>
+                    </div>
+                    <div class="ruled-list-item"><span>Venturi Injector Flow:</span><strong>2.4 L/min</strong></div>
                   </div>
                 </div>
               </div>
@@ -378,15 +447,29 @@
 
           <!-- Emergency Alerts Sub-Tab -->
           <div id="manager-alerts-triage" class="sub-tab-content" style="display: none;">
-            <div class="panel" style="border-color: rgba(239, 68, 68, 0.4);">
+            <div class="panel" style="border-color: var(--danger-border);">
               <div class="panel-header">
-                <div class="panel-title" style="color: #fca5a5;">
+                <div class="panel-title" style="color: var(--danger);">
                   <i class="fa-solid fa-triangle-exclamation text-red"></i> Emergency Field Alerts & Issue Triage
                 </div>
-                <span class="badge badge-red" id="active-alerts-badge">2 Emergencies Active</span>
+                <span class="badge badge-red" id="active-alerts-badge"><i class="fa-solid fa-triangle-exclamation"></i>
+                  2 Emergencies Active</span>
               </div>
 
               <div id="alerts-container" style="display: flex; flex-direction: column; gap: 12px;"></div>
+            </div>
+          </div>
+
+          <!-- Machinery & Equipment Sub-Tab -->
+          <div id="manager-machinery-status" class="sub-tab-content" style="display: none;">
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <i class="fa-solid fa-tractor text-blue"></i> Shared Machinery & Equipment Conflict Matrix
+                </div>
+              </div>
+
+              <div class="grid-2" id="equipment-container"></div>
             </div>
           </div>
 
@@ -413,20 +496,22 @@
                 </div>
               </div>
 
-              <table>
-                <thead>
-                  <tr>
-                    <th>Worker Name</th>
-                    <th>Role Title</th>
-                    <th>Tasks Assigned</th>
-                    <th>Tasks Completed</th>
-                    <th>Compliance %</th>
-                    <th>Field Status</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody id="workers-body"></tbody>
-              </table>
+              <div class="table-responsive">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Worker Name</th>
+                      <th>Role Title</th>
+                      <th>Tasks Assigned</th>
+                      <th>Tasks Completed</th>
+                      <th>Compliance %</th>
+                      <th>Field Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="workers-body"></tbody>
+                </table>
+              </div>
             </div>
           </div>
 
@@ -438,18 +523,22 @@
                   <i class="fa-solid fa-list-check text-green"></i> Verified Tasks Audit Log
                 </div>
               </div>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Protocol Name</th>
-                    <th>Plot Location</th>
-                    <th>Worker</th>
-                    <th>Quantity Verified</th>
-                    <th>Audit Status</th>
-                  </tr>
-                </thead>
-                <tbody id="verified-tasks-body"></tbody>
-              </table>
+              <div class="table-responsive">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Protocol Name</th>
+                      <th>Plot Location</th>
+                      <th>Worker</th>
+                      <th>Quantity Verified</th>
+                      <th>Audit Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="verified-tasks-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
             </div>
           </div>
         </div>
@@ -479,27 +568,36 @@
               </div>
               <div class="grid-3">
                 <div class="card">
-                  <div style="font-size: 12px; font-weight: 700; color: #a7f3d0;"><i class="fa-solid fa-hand-holding-medical"></i> Chemical & Fertigation PPE</div>
-                  <div style="font-size: 11px; color: #e5e7eb; margin-top: 6px;">
-                    <div>• Heavy Duty Rubber Gloves: <span style="color: #6ee7b7; font-weight: 700;">Verified Ready</span></div>
-                    <div>• Chemical Splash Goggles: <span style="color: #6ee7b7; font-weight: 700;">Verified Ready</span></div>
-                    <div>• Waterproof Field Boots: <span style="color: #6ee7b7; font-weight: 700;">Verified Ready</span></div>
+                  <div class="card-title" style="margin-bottom: 8px;"><i
+                      class="fa-solid fa-hand-holding-medical text-green"></i> Chemical & Fertigation PPE</div>
+                  <div class="ruled-list">
+                    <div class="ruled-list-item"><span>Heavy Duty Gloves:</span><strong
+                        style="color: var(--success);"><i class="fa-solid fa-circle-check"></i> Verified</strong></div>
+                    <div class="ruled-list-item"><span>Splash Goggles:</span><strong style="color: var(--success);"><i
+                          class="fa-solid fa-circle-check"></i> Verified</strong></div>
+                    <div class="ruled-list-item"><span>Waterproof Boots:</span><strong style="color: var(--success);"><i
+                          class="fa-solid fa-circle-check"></i> Verified</strong></div>
                   </div>
                 </div>
 
                 <div class="card">
-                  <div style="font-size: 12px; font-weight: 700; color: #a7f3d0;"><i class="fa-solid fa-mask-face"></i> Spraying & Scouting PPE</div>
-                  <div style="font-size: 11px; color: #e5e7eb; margin-top: 6px;">
-                    <div>• N95 Particulate Respirator: <span style="color: #6ee7b7; font-weight: 700;">Issued</span></div>
-                    <div>• Protective Overalls: <span style="color: #6ee7b7; font-weight: 700;">Issued</span></div>
+                  <div class="card-title" style="margin-bottom: 8px;"><i class="fa-solid fa-mask-face text-amber"></i>
+                    Spraying & Scouting PPE</div>
+                  <div class="ruled-list">
+                    <div class="ruled-list-item"><span>N95 Respirator:</span><strong style="color: var(--success);"><i
+                          class="fa-solid fa-circle-check"></i> Issued</strong></div>
+                    <div class="ruled-list-item"><span>Protective Overalls:</span><strong
+                        style="color: var(--success);"><i class="fa-solid fa-circle-check"></i> Issued</strong></div>
                   </div>
                 </div>
 
                 <div class="card">
-                  <div style="font-size: 12px; font-weight: 700; color: #a7f3d0;"><i class="fa-solid fa-phone"></i> Emergency Field Contacts</div>
-                  <div style="font-size: 11px; color: #e5e7eb; margin-top: 6px;">
-                    <div>• Manager Kwame: <span style="color: #6ee7b7;">+233 24 555 0192</span></div>
-                    <div>• Agronomist Dr. Lobos: <span style="color: #6ee7b7;">+233 20 555 0188</span></div>
+                  <div class="card-title" style="margin-bottom: 8px;"><i class="fa-solid fa-phone text-blue"></i>
+                    Emergency Field Contacts</div>
+                  <div class="ruled-list">
+                    <div class="ruled-list-item"><span>Manager Kwame:</span><strong>+233 24 555 0192</strong></div>
+                    <div class="ruled-list-item"><span>Agronomist Dr. Lobos:</span><strong>+233 20 555 0188</strong>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -523,24 +621,28 @@
 
               <div class="grid-4">
                 <div class="card">
-                  <div style="font-size: 11px; color: #a7f3d0; font-weight: 700;">Overall Performance</div>
-                  <div style="font-size: 28px; font-weight: 900; margin-top: 4px;">93%</div>
-                  <div style="font-size: 10px; color: #34d399;"><i class="fa-solid fa-check"></i> High Operational Compliance</div>
+                  <div style="font-weight: 600; color: var(--text-muted);">Overall Performance</div>
+                  <div class="kpi-figure" style="color: var(--success);">93%</div>
+                  <div style="color: var(--success); font-weight: 500;"><i class="fa-solid fa-check"></i> High
+                    Compliance</div>
                 </div>
                 <div class="card">
-                  <div style="font-size: 11px; color: #a7f3d0; font-weight: 700;">Irrigation Compliance</div>
-                  <div style="font-size: 28px; font-weight: 900; margin-top: 4px;">97%</div>
-                  <div style="font-size: 10px; color: #34d399;"><i class="fa-solid fa-droplet"></i> 7 Cycles Completed</div>
+                  <div style="font-weight: 600; color: var(--text-muted);">Irrigation Compliance</div>
+                  <div class="kpi-figure" style="color: var(--success);">97%</div>
+                  <div style="color: var(--success); font-weight: 500;"><i class="fa-solid fa-droplet"></i> 7 Cycles
+                    Done</div>
                 </div>
                 <div class="card">
-                  <div style="font-size: 11px; color: #a7f3d0; font-weight: 700;">Nutrition Adherence</div>
-                  <div style="font-size: 28px; font-weight: 900; margin-top: 4px;">91%</div>
-                  <div style="font-size: 10px; color: #fde68a;"><i class="fa-solid fa-flask"></i> 2 Applications Done</div>
+                  <div style="font-weight: 600; color: var(--text-muted);">Nutrition Adherence</div>
+                  <div class="kpi-figure" style="color: var(--warning);">91%</div>
+                  <div style="color: var(--warning); font-weight: 500;"><i class="fa-solid fa-flask"></i> 2 Applications
+                  </div>
                 </div>
                 <div class="card">
-                  <div style="font-size: 11px; color: #a7f3d0; font-weight: 700;">Expected Harvest</div>
-                  <div style="font-size: 28px; font-weight: 900; margin-top: 4px;">10,000 kg</div>
-                  <div style="font-size: 10px; color: #c084fc;"><i class="fa-solid fa-basket-shopping"></i> 1,240 kg Picked YTD</div>
+                  <div style="font-weight: 600; color: var(--text-muted);">Expected Harvest</div>
+                  <div class="kpi-figure">10,000 kg</div>
+                  <div style="color: var(--blue); font-weight: 500;"><i class="fa-solid fa-basket-shopping"></i> 1,240
+                    kg Picked</div>
                 </div>
               </div>
             </div>
@@ -551,32 +653,35 @@
                 <div class="panel-title">
                   <i class="fa-solid fa-sack-dollar text-purple"></i> Financial Efficiency & Harvest Yield Forecast
                 </div>
+                <a href="/api/export/harvest-csv" download class="btn btn-secondary">
+                  <i class="fa-solid fa-file-csv"></i> Export Revenue CSV
+                </a>
               </div>
               <div class="grid-3">
                 <div class="card">
-                  <div style="font-size: 11px; color: #a7f3d0; font-weight: 700;">Projected Harvest Revenue</div>
-                  <div style="font-size: 26px; font-weight: 900; color: #34d399; margin-top: 4px;">$24,500 EST</div>
-                  <div style="font-size: 10.5px; color: #e5e7eb; margin-top: 6px;">
-                    <div>• Target Price: $2.45 / kg</div>
-                    <div>• Fresh Market Grade A: 88% Output</div>
+                  <div style="font-weight: 600; color: var(--text-muted);">Projected Harvest Revenue</div>
+                  <div class="kpi-figure" style="color: var(--success); margin: 6px 0;">$24,500</div>
+                  <div class="ruled-list">
+                    <div class="ruled-list-item"><span>Target Price:</span><strong>$2.45 / kg</strong></div>
+                    <div class="ruled-list-item"><span>Grade A Output:</span><strong>88% Fresh Market</strong></div>
                   </div>
                 </div>
 
                 <div class="card">
-                  <div style="font-size: 11px; color: #a7f3d0; font-weight: 700;">Input ROI & Cost Ratio</div>
-                  <div style="font-size: 26px; font-weight: 900; color: #fde68a; margin-top: 4px;">3.8x ROI</div>
-                  <div style="font-size: 10.5px; color: #e5e7eb; margin-top: 6px;">
-                    <div>• Fertilizer Efficiency Index: 94%</div>
-                    <div>• Labor Cost per Acre: $420</div>
+                  <div style="font-weight: 600; color: var(--text-muted);">Input ROI & Cost Ratio</div>
+                  <div class="kpi-figure" style="color: var(--warning); margin: 6px 0;">3.8x ROI</div>
+                  <div class="ruled-list">
+                    <div class="ruled-list-item"><span>Fertilizer Efficiency:</span><strong>94% Index</strong></div>
+                    <div class="ruled-list-item"><span>Labor Cost / Acre:</span><strong>$420</strong></div>
                   </div>
                 </div>
 
                 <div class="card">
-                  <div style="font-size: 11px; color: #a7f3d0; font-weight: 700;">Water & Energy Conservation</div>
-                  <div style="font-size: 26px; font-weight: 900; color: #93c5fd; margin-top: 4px;">96% Optimal</div>
-                  <div style="font-size: 10.5px; color: #e5e7eb; margin-top: 6px;">
-                    <div>• Drip Efficiency Rating: 96%</div>
-                    <div>• Pump Fuel Consumption: 14L/week</div>
+                  <div style="font-weight: 600; color: var(--text-muted);">Water & Energy Conservation</div>
+                  <div class="kpi-figure" style="color: var(--blue); margin: 6px 0;">96%</div>
+                  <div class="ruled-list">
+                    <div class="ruled-list-item"><span>Drip Efficiency:</span><strong>96% Optimal</strong></div>
+                    <div class="ruled-list-item"><span>Pump Fuel Usage:</span><strong>14 L / week</strong></div>
                   </div>
                 </div>
               </div>
@@ -604,17 +709,22 @@
 
   <div id="reject-modal" class="modal-overlay" style="display: none;">
     <div class="modal">
-      <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
-        <h3 style="font-size: 16px; color: #fca5a5;"><i class="fa-solid fa-triangle-exclamation"></i> Reject Work & Request Rework</h3>
-        <button onclick="closeModal('reject-modal')" style="background: none; border: none; color: #fff; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 style="color: var(--danger);"><i class="fa-solid fa-triangle-exclamation"></i> Reject Work & Request Rework
+        </h3>
+        <button onclick="closeModal('reject-modal')"
+          style="background: none; border: none; color: var(--text); cursor: pointer; font-size: 18px;"
+          aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <form onsubmit="submitTaskRejection(event)">
         <input type="hidden" id="reject-task-id" />
         <label>Reason for Rework / Rejection</label>
-        <textarea id="reject-reason" rows="3" required placeholder="Explain why the evidence was rejected..."></textarea>
+        <textarea id="reject-reason" rows="3" required
+          placeholder="Explain why the evidence was rejected..."></textarea>
         <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px;">
           <button type="button" class="btn btn-secondary" onclick="closeModal('reject-modal')">Cancel</button>
-          <button type="submit" class="btn btn-danger"><i class="fa-solid fa-rotate-left"></i> Send Back for Rework</button>
+          <button type="submit" class="btn btn-danger"><i class="fa-solid fa-rotate-left"></i> Send Back for
+            Rework</button>
         </div>
       </form>
     </div>
@@ -622,9 +732,11 @@
 
   <div id="reassign-modal" class="modal-overlay" style="display: none;">
     <div class="modal">
-      <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
-        <h3 style="font-size: 16px;"><i class="fa-solid fa-user-pen"></i> Reassign Task to Worker</h3>
-        <button onclick="closeModal('reassign-modal')" style="background: none; border: none; color: #fff; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3><i class="fa-solid fa-user-pen"></i> Reassign Task to Worker</h3>
+        <button onclick="closeModal('reassign-modal')"
+          style="background: none; border: none; color: var(--text); cursor: pointer; font-size: 18px;"
+          aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <form onsubmit="submitWorkerReassign(event)">
         <input type="hidden" id="reassign-task-id" />
@@ -645,9 +757,11 @@
 
   <div id="protocol-modal" class="modal-overlay" style="display: none;">
     <div class="modal" style="max-width: 550px;">
-      <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
-        <h3 style="font-size: 16px;"><i class="fa-solid fa-file-circle-plus"></i> Publish Agronomic Protocol</h3>
-        <button onclick="closeModal('protocol-modal')" style="background: none; border: none; color: #fff; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3><i class="fa-solid fa-file-circle-plus"></i> Publish Agronomic Protocol</h3>
+        <button onclick="closeModal('protocol-modal')"
+          style="background: none; border: none; color: var(--text); cursor: pointer; font-size: 18px;"
+          aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <form onsubmit="submitProtocol(event)">
         <label>Protocol Title</label>
@@ -712,14 +826,17 @@
 
   <div id="task-modal" class="modal-overlay" style="display: none;">
     <div class="modal">
-      <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
-        <h3 style="font-size: 16px;"><i class="fa-solid fa-paper-plane"></i> Dispatch Task to Plot</h3>
-        <button onclick="closeModal('task-modal')" style="background: none; border: none; color: #fff; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3><i class="fa-solid fa-paper-plane"></i> Dispatch Task to Plot</h3>
+        <button onclick="closeModal('task-modal')"
+          style="background: none; border: none; color: var(--text); cursor: pointer; font-size: 18px;"
+          aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <form onsubmit="submitDispatchTask(event)">
         <input type="hidden" id="task-prot-id" />
         <label>Selected Protocol</label>
-        <input type="text" id="task-prot-name" readonly style="background: #0d1a12; color: #34d399;" />
+        <input type="text" id="task-prot-name" readonly
+          style="background: var(--surface-raised); color: var(--success); font-weight: 600;" />
 
         <label>Target Plot Location</label>
         <select id="task-plot-select">
@@ -735,6 +852,15 @@
           <option value="Ama Serwaa">Ama Serwaa (Pest & Disease Scout)</option>
           <option value="Kwaku Bonsu">Kwaku Bonsu (Irrigation Specialist)</option>
           <option value="Yaa Asantewaa">Yaa Asantewaa (General Worker)</option>
+        </select>
+
+        <label>Select Required Machinery (Conflict Checked)</label>
+        <select id="task-equipment-select">
+          <option value="">None (Manual Field Task)</option>
+          <option value="eq-1">Venturi Fertigation Injector (Fertigation)</option>
+          <option value="eq-2">High-Pressure Drip Pump 15-HP (Irrigation)</option>
+          <option value="eq-3">Motorized Knapsack Sprayer (Scouting & Spraying)</option>
+          <option value="eq-4">Field Utility Tractor & Disc Harrow (Tillage)</option>
         </select>
 
         <label>Priority</label>
@@ -754,9 +880,11 @@
 
   <div id="inspection-modal" class="modal-overlay" style="display: none;">
     <div class="modal" style="max-width: 500px;">
-      <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
-        <h3 style="font-size: 16px;"><i class="fa-solid fa-clipboard-question"></i> Record Farm Inspection Log</h3>
-        <button onclick="closeModal('inspection-modal')" style="background: none; border: none; color: #fff; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3><i class="fa-solid fa-clipboard-question"></i> Record Farm Inspection Log</h3>
+        <button onclick="closeModal('inspection-modal')"
+          style="background: none; border: none; color: var(--text); cursor: pointer; font-size: 18px;"
+          aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <form onsubmit="submitInspection(event)">
         <label>Target Plot</label>
@@ -789,7 +917,8 @@
         </div>
 
         <label>Agronomic Field Observations</label>
-        <textarea id="insp-obs" rows="3" required placeholder="Observed leaf color, flowering cluster density, soil moisture level..."></textarea>
+        <textarea id="insp-obs" rows="3" required
+          placeholder="Observed leaf color, flowering cluster density, soil moisture level..."></textarea>
 
         <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px;">
           <button type="button" class="btn btn-secondary" onclick="closeModal('inspection-modal')">Cancel</button>
@@ -801,14 +930,16 @@
 
   <div id="edit-plot-modal" class="modal-overlay" style="display: none;">
     <div class="modal">
-      <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
-        <h3 style="font-size: 16px;"><i class="fa-solid fa-flask"></i> Update Soil & Lifecycle Metrics</h3>
-        <button onclick="closeModal('edit-plot-modal')" style="background: none; border: none; color: #fff; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3><i class="fa-solid fa-flask"></i> Update Soil & Lifecycle Metrics</h3>
+        <button onclick="closeModal('edit-plot-modal')"
+          style="background: none; border: none; color: var(--text); cursor: pointer; font-size: 18px;"
+          aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <form onsubmit="submitPlotMetrics(event)">
         <input type="hidden" id="edit-plot-id" />
         <label>Plot Name</label>
-        <input type="text" id="edit-plot-name" readonly style="background: #0d1a12;" />
+        <input type="text" id="edit-plot-name" readonly style="background: var(--surface-raised);" />
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
           <div>
@@ -850,21 +981,25 @@
 
   <div id="evidence-modal" class="modal-overlay" style="display: none;">
     <div class="modal">
-      <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
-        <h3 style="font-size: 16px;"><i class="fa-solid fa-camera"></i> Upload Photo Evidence</h3>
-        <button onclick="closeModal('evidence-modal')" style="background: none; border: none; color: #fff; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3><i class="fa-solid fa-camera"></i> Upload Photo Evidence</h3>
+        <button onclick="closeModal('evidence-modal')"
+          style="background: none; border: none; color: var(--text); cursor: pointer; font-size: 18px;"
+          aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <form onsubmit="submitEvidence(event)">
         <input type="hidden" id="evidence-task-id" />
-        
+
         <label>Photo Proof Preview</label>
-        <img id="evidence-img-preview" src="https://images.unsplash.com/photo-1592417817098-8f3d6eb247a5?w=500&q=80" class="img-preview" alt="Fertigation Proof" />
-        
+        <img id="evidence-img-preview" src="https://images.unsplash.com/photo-1592417817098-8f3d6eb247a5?w=500&q=80"
+          class="img-preview" alt="Fertigation Proof" />
+
         <label>Quantity / Water Applied</label>
         <input type="text" id="evidence-qty" required value="1,200 Liters fertigation completed" />
 
         <label>Field Notes & Observations</label>
-        <textarea id="evidence-notes" rows="2" placeholder="Flushed lines for 15 mins. Injector ran cleanly."></textarea>
+        <textarea id="evidence-notes" rows="2"
+          placeholder="Flushed lines for 15 mins. Injector ran cleanly."></textarea>
 
         <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px;">
           <button type="button" class="btn btn-secondary" onclick="closeModal('evidence-modal')">Cancel</button>
@@ -876,9 +1011,12 @@
 
   <div id="problem-modal" class="modal-overlay" style="display: none;">
     <div class="modal">
-      <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
-        <h3 style="font-size: 16px; color: #fca5a5;"><i class="fa-solid fa-triangle-exclamation"></i> Report Emergency Farm Problem</h3>
-        <button onclick="closeModal('problem-modal')" style="background: none; border: none; color: #fff; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 style="color: var(--danger);"><i class="fa-solid fa-triangle-exclamation"></i> Report Emergency Farm Problem
+        </h3>
+        <button onclick="closeModal('problem-modal')"
+          style="background: none; border: none; color: var(--text); cursor: pointer; font-size: 18px;"
+          aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <form onsubmit="submitProblem(event)">
         <label>Plot Location</label>
@@ -889,11 +1027,13 @@
         </select>
 
         <label>Issue Description</label>
-        <textarea id="prob-desc" rows="3" required placeholder="Describe issue (e.g. Drip line burst, pest cluster, pressure drop...)"></textarea>
+        <textarea id="prob-desc" rows="3" required
+          placeholder="Describe issue (e.g. Drip line burst, pest cluster, pressure drop...)"></textarea>
 
         <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px;">
           <button type="button" class="btn btn-secondary" onclick="closeModal('problem-modal')">Cancel</button>
-          <button type="submit" class="btn btn-danger"><i class="fa-solid fa-paper-plane"></i> Dispatch Alert to Manager</button>
+          <button type="submit" class="btn btn-danger"><i class="fa-solid fa-paper-plane"></i> Dispatch Alert to
+            Manager</button>
         </div>
       </form>
     </div>
@@ -901,29 +1041,35 @@
 
   <div id="report-modal" class="modal-overlay" style="display: none;">
     <div class="modal" style="max-width: 600px;">
-      <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
-        <h3 style="font-size: 16px;"><i class="fa-solid fa-file-lines"></i> WEEKLY FARM REPORT — John's Tomato Farm</h3>
-        <button onclick="closeModal('report-modal')" style="background: none; border: none; color: #fff; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3><i class="fa-solid fa-file-lines"></i> WEEKLY FARM REPORT — John's Tomato Farm</h3>
+        <button onclick="closeModal('report-modal')"
+          style="background: none; border: none; color: var(--text); cursor: pointer; font-size: 18px;"
+          aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <div style="font-size: 12px; line-height: 1.6;">
-        <p><strong>Week:</strong> Sept 28 – Oct 4, 2026</p>
-        <p><strong>Compliance Score:</strong> <span style="color: #6ee7b7; font-weight: 700;">93% High Operational Integrity</span></p>
-        <hr style="border-color: rgba(52,211,153,0.2); margin: 10px 0;" />
-        <p><strong>Tasks Completed:</strong> 96 / 103 Dispatched</p>
-        <p><strong>Irrigation Cycles:</strong> 7 Completed</p>
-        <p><strong>Fertilizer Applications:</strong> 2 Completed</p>
-        <p><strong>Harvest Output:</strong> 1,240 kg Fresh Tomatoes</p>
-        <hr style="border-color: rgba(52,211,153,0.2); margin: 10px 0;" />
-        <p style="color: #fde68a;"><strong>Head Agronomist Remarks:</strong></p>
-        <p style="color: #9ca3af; font-style: italic;">"Crop growth and vegetative vigor remain satisfactory across Plot A and Nursery. Plot C fruiting stage is progressing as scheduled."</p>
+      <div class="ruled-list">
+        <div class="ruled-list-item"><span>Week Period:</span><strong>Sept 28 – Oct 4, 2026</strong></div>
+        <div class="ruled-list-item"><span>Operational Compliance Score:</span><strong style="color: var(--success);"><i
+              class="fa-solid fa-check"></i> 93% High Integrity</strong></div>
+        <div class="ruled-list-item"><span>Tasks Executed:</span><strong>96 / 103 Dispatched</strong></div>
+        <div class="ruled-list-item"><span>Irrigation Cycles:</span><strong>7 Completed</strong></div>
+        <div class="ruled-list-item"><span>Fertilizer Applications:</span><strong>2 Completed</strong></div>
+        <div class="ruled-list-item"><span>Harvest Output:</span><strong>1,240 kg Fresh Tomatoes</strong></div>
+      </div>
+      <div
+        style="margin-top: 16px; padding: 12px; background: var(--surface-raised); border-radius: var(--radius); border: 1px solid var(--border);">
+        <strong style="color: var(--warning); display: block; margin-bottom: 4px;">Head Agronomist Remarks:</strong>
+        <p style="color: var(--text-muted); font-style: italic;">"Crop growth and vegetative vigor remain satisfactory
+          across Plot A and Nursery. Plot C fruiting stage is progressing as scheduled."</p>
       </div>
       <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px;">
         <button class="btn btn-secondary" onclick="closeModal('report-modal')">Close</button>
-        <button class="btn" onclick="alert('Downloading PDF Report...')"><i class="fa-solid fa-download"></i> Download PDF</button>
+        <button class="btn" onclick="alert('Downloading PDF Report...')"><i class="fa-solid fa-download"></i> Download
+          PDF</button>
       </div>
     </div>
-  </div>
 
-  <script src="/app.js"></script>
+    <script src="/app.js"></script>
 </body>
+
 </html>

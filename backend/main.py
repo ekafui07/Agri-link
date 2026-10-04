@@ -57,6 +57,24 @@ class Farm(BaseModel):
     overallHealth: str
     plots: List[Plot]
 
+class Equipment(BaseModel):
+    id: str
+    name: str
+    category: str
+    status: str  # Available, In Use, Maintenance
+    currentPlot: Optional[str] = None
+    assignedWorker: Optional[str] = None
+
+class InventoryItem(BaseModel):
+    id: str
+    name: str
+    category: str  # Fertilizer, Chemical, Hardware, Seeds
+    stockQuantity: float
+    unit: str  # kg, L, pcs
+    reorderLevel: float
+    unitCostUsd: float
+    status: str  # In Stock, Low Stock Warning
+
 class ProtocolCreate(BaseModel):
     name: str
     category: str
@@ -93,6 +111,8 @@ class TaskCreate(BaseModel):
     ppeRequired: List[str]
     requiresPhotoEvidence: bool = True
     targetQuantity: Optional[str] = None
+    equipmentId: Optional[str] = None
+    equipmentName: Optional[str] = None
 
 class TaskEvidence(BaseModel):
     photoUrl: str
@@ -172,6 +192,20 @@ class TimelineEvent(BaseModel):
     actorName: str
 
 # --- Database ---
+EQUIPMENT_DB: List[Equipment] = [
+    Equipment(id="eq-1", name="Venturi Fertigation Injector", category="Fertigation", status="Available"),
+    Equipment(id="eq-2", name="High-Pressure Drip Pump 15-HP", category="Irrigation", status="In Use", currentPlot="Plot B (Flowering)", assignedWorker="Kwaku Bonsu"),
+    Equipment(id="eq-3", name="Motorized Knapsack Sprayer", category="Scouting & Spraying", status="Available"),
+    Equipment(id="eq-4", name="Field Utility Tractor & Disc Harrow", category="Tillage", status="Maintenance")
+]
+
+INVENTORY_DB: List[InventoryItem] = [
+    InventoryItem(id="inv-1", name="Calcium Nitrate (15.5-0-0 + 26% CaO)", category="Fertilizer", stockQuantity=150.0, unit="kg", reorderLevel=30.0, unitCostUsd=1.20, status="In Stock"),
+    InventoryItem(id="inv-2", name="Potassium Nitrate (13-0-46)", category="Fertilizer", stockQuantity=85.0, unit="kg", reorderLevel=25.0, unitCostUsd=1.50, status="In Stock"),
+    InventoryItem(id="inv-3", name="Neem Oil Extract (Azadirachtin 1%)", category="Chemical", stockQuantity=4.5, unit="L", reorderLevel=5.0, unitCostUsd=8.00, status="Low Stock Warning"),
+    InventoryItem(id="inv-4", name="Copper Hydroxide 77% WP", category="Chemical", stockQuantity=22.0, unit="kg", reorderLevel=10.0, unitCostUsd=4.50, status="In Stock"),
+    InventoryItem(id="inv-5", name="Inline Drip Emitter (2.0 L/h)", category="Hardware", stockQuantity=450.0, unit="pcs", reorderLevel=100.0, unitCostUsd=0.25, status="In Stock")
+]
 FARMS_DB: List[Farm] = [
     Farm(
         id="f-1",
@@ -543,17 +577,58 @@ def create_protocol(payload: ProtocolCreate):
     ))
     return new_prot
 
+@app.get("/api/equipment")
+def get_equipment(): return EQUIPMENT_DB
+
+@app.get("/api/inventory")
+def get_inventory(): return INVENTORY_DB
+
+@app.get("/api/export/harvest-csv")
+def export_harvest_csv():
+    from fastapi.responses import Response
+    csv_content = "Farm Name,Location,Crop Variety,Acreage,Expected Yield (kg),Projected Revenue (USD),Current Output (kg),Input Cost ROI\n"
+    csv_content += "John's Tomato Farm,Dodowa,Fresh Market Tomato (Ananya F1),2.5,10000,$24500,1240,3.8x\n"
+    csv_content += "Volta Basin Organic Farm,Ada Foah,Habanero & Sweet Bell,4.0,16000,$38000,2400,4.1x\n"
+    return Response(content=csv_content, media_type="text/csv", headers={"Content-Disposition": "attachment; filename=afuom_hq_harvest_revenue_report.csv"})
+
+@app.get("/api/export/soil-csv")
+def export_soil_csv():
+    from fastapi.responses import Response
+    csv_content = "Farm ID,Plot ID,Plot Name,Growth Stage,Soil pH,Nitrogen (PPM),Phosphorous (PPM),Potassium (PPM),Moisture Pct,Health Status\n"
+    for farm in FARMS_DB:
+        for plot in farm.plots:
+            csv_content += f"{farm.id},{plot.id},{plot.name},{plot.growthStage},{plot.soilPh},{plot.nitrogenLevelPpm},{plot.phosphorousPpm},{plot.potassiumPpm},{plot.moisturePct},{plot.healthStatus}\n"
+    return Response(content=csv_content, media_type="text/csv", headers={"Content-Disposition": "attachment; filename=afuom_hq_soil_test_history.csv"})
+
 @app.get("/api/tasks")
 def get_tasks(): return TASKS_DB
 
 @app.post("/api/tasks")
 def dispatch_task(payload: TaskCreate):
+    # Equipment Overlap / Conflict Engine
+    if payload.equipmentId:
+        for eq in EQUIPMENT_DB:
+            if eq.id == payload.equipmentId:
+                if eq.status == "In Use":
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"CONFLICT DETECTED: Machinery '{eq.name}' is already IN USE at {eq.currentPlot or 'another plot'} by {eq.assignedWorker or 'another worker'}!"
+                    )
+                elif eq.status == "Maintenance":
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"EQUIPMENT UNAVAILABLE: '{eq.name}' is under maintenance!"
+                    )
+                eq.status = "In Use"
+                eq.currentPlot = payload.plotName
+                eq.assignedWorker = payload.assignedWorkerName
+
     new_task = Task(id=f"task-{len(TASKS_DB)+101}", status="Scheduled", **payload.model_dump())
     TASKS_DB.insert(0, new_task)
     TIMELINE_DB.insert(0, TimelineEvent(
         id=f"tl-{len(TIMELINE_DB)+1}", farmId=payload.farmId, timestamp="Just now",
         category="Task", title=f"Task Dispatched to {payload.plotName}",
-        description=f"Task '{payload.protocolName}' assigned to {payload.assignedWorkerName}.",
+        description=f"Task '{payload.protocolName}' assigned to {payload.assignedWorkerName}." + (f" Equipment reserved: {payload.equipmentName}." if payload.equipmentName else ""),
         actorRole="agronomist", actorName="Dr. Lobos"
     ))
     return new_task
@@ -588,10 +663,32 @@ def verify_task(task_id: str, payload: TaskVerify):
             task.status = "Verified"
             task.verificationNotes = payload.verificationNotes
             task.verifiedAt = datetime.now().strftime("%I:%M %p")
+            
+            # Release equipment if assigned
+            if task.equipmentId:
+                for eq in EQUIPMENT_DB:
+                    if eq.id == task.equipmentId:
+                        eq.status = "Available"
+                        eq.currentPlot = None
+                        eq.assignedWorker = None
+
+            # Deduct stock inventory for nutrition/chemical tasks
+            if task.category == "Nutrition" and len(INVENTORY_DB) > 0:
+                INVENTORY_DB[0].stockQuantity = max(0.0, INVENTORY_DB[0].stockQuantity - 2.5)
+            elif task.category == "Pest & Disease" and len(INVENTORY_DB) > 2:
+                INVENTORY_DB[2].stockQuantity = max(0.0, INVENTORY_DB[2].stockQuantity - 0.5)
+                if INVENTORY_DB[2].stockQuantity <= INVENTORY_DB[2].reorderLevel:
+                    INVENTORY_DB[2].status = "Low Stock Warning"
+                    ALERTS_DB.insert(0, ProblemAlert(
+                        id=f"alert-{len(ALERTS_DB)+1}", farmId=task.farmId, plotName="Stock Room",
+                        description=f"LOW STOCK WARNING: '{INVENTORY_DB[2].name}' reached {INVENTORY_DB[2].stockQuantity} {INVENTORY_DB[2].unit}. Reorder threshold is {INVENTORY_DB[2].reorderLevel} {INVENTORY_DB[2].unit}.",
+                        status="Active", reportedAt="Just now", reportedBy="System Inventory Ledger"
+                    ))
+
             TIMELINE_DB.insert(0, TimelineEvent(
                 id=f"tl-{len(TIMELINE_DB)+1}", farmId=task.farmId, timestamp="Just now",
                 category="Task", title=f"Task Verified by Manager",
-                description=f"Manager Kwame Mensah verified work for '{task.protocolName}' on {task.plotName}.",
+                description=f"Manager Kwame Mensah verified work for '{task.protocolName}' on {task.plotName}. Input stock auto-deducted.",
                 actorRole="manager", actorName="Kwame Mensah"
             ))
             return task

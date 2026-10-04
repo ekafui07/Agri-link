@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Afuom HQ | Remote Farm Operations OS</title>
+  <!-- Google Fonts: IBM Plex Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <!-- Font Awesome 6 Real Static Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+
+  <!-- App Layout Shell -->
+  <div class="app-layout">
+
+    <!-- Mobile Header Bar (Visible on Mobile Viewports) -->
+    <header class="mobile-header">
+      <button class="mobile-toggle" onclick="toggleMobileSidebar()">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div class="brand-badge" style="padding: 4px 8px; font-size: 12px;"><i class="fa-solid fa-leaf"></i> AHQ</div>
+        <div class="brand-title" style="font-size: 16px;">Afuom HQ</div>
+      </div>
+    </header>
+
+    <!-- Full-Height Left Sidebar Navigation -->
+    <aside class="app-sidebar" id="app-sidebar">
+      <div class="sidebar-top">
+        <!-- Brand Logo & Header -->
+        <div class="sidebar-brand">
+          <div class="brand-badge"><i class="fa-solid fa-leaf"></i> AHQ</div>
+          <div>
+            <div class="brand-title">Afuom HQ</div>
+            <div class="brand-sub">Farm Operations OS</div>
+          </div>
+        </div>
+
+        <!-- Role Selector Switcher Grid -->
+        <div class="sidebar-role-box">
+          <span class="sidebar-label"><i class="fa-solid fa-users"></i> Switch User Role</span>
+          <div class="role-pills-grid">
+            <button class="role-pill active" id="role-pill-agronomist" onclick="switchRole('agronomist')">
+              <i class="fa-solid fa-wheat-awn"></i> Agronomist
+            </button>
+            <button class="role-pill" id="role-pill-manager" onclick="switchRole('manager')">
+              <i class="fa-solid fa-user-tie"></i> Manager
+            </button>
+            <button class="role-pill" id="role-pill-worker" onclick="switchRole('worker')">
+              <i class="fa-solid fa-helmet-safety"></i> Worker
+            </button>
+            <button class="role-pill" id="role-pill-owner" onclick="switchRole('owner')">
+              <i class="fa-solid fa-chart-pie"></i> Owner
+            </button>
+          </div>
+        </div>
+
+        <!-- Sidebar Navigation Menus for Active Role -->
+        <div class="sidebar-menu-container">
+
+          <!-- 1. AGRONOMIST MENU -->
+          <nav id="agronomist-nav-group" class="role-nav-group">
+            <div class="sidebar-nav-title">Agronomist Views</div>
+            <button class="nav-item active" data-tab="command-center" onclick="switchSubTab('agronomist', 'command-center')">
+              <i class="fa-solid fa-gauge-high text-green"></i> Command Center
+            </button>
+            <button class="nav-item" data-tab="plot-chemistry" onclick="switchSubTab('agronomist', 'plot-chemistry')">
+              <i class="fa-solid fa-layer-group text-green"></i> Plot Chemistry
+            </button>
+            <button class="nav-item" data-tab="protocol-library" onclick="switchSubTab('agronomist', 'protocol-library')">
+              <i class="fa-solid fa-book-bookmark text-green"></i> Protocol Playbooks
+            </button>
+            <button class="nav-item" data-tab="inspections" onclick="switchSubTab('agronomist', 'inspections')">
+              <i class="fa-solid fa-clipboard-check text-green"></i> Inspection Log
+            </button>
+          </nav>
+
+          <!-- 2. FARM MANAGER MENU -->
+          <nav id="manager-nav-group" class="role-nav-group" style="display: none;">
+            <div class="sidebar-nav-title">Manager Views</div>
+            <button class="nav-item active" data-tab="command-console" onclick="switchSubTab('manager', 'command-console')">
+              <i class="fa-solid fa-gauge-high text-blue"></i> Operations Console
+            </button>
+            <button class="nav-item" data-tab="alerts-triage" onclick="switchSubTab('manager', 'alerts-triage')">
+              <i class="fa-solid fa-triangle-exclamation text-red"></i> Emergency Alerts
+            </button>
+            <button class="nav-item" data-tab="photo-audits" onclick="switchSubTab('manager', 'photo-audits')">
+              <i class="fa-solid fa-camera text-blue"></i> Photo Audit Queue
+            </button>
+            <button class="nav-item" data-tab="ground-crew" onclick="switchSubTab('manager', 'ground-crew')">
+              <i class="fa-solid fa-users text-blue"></i> Ground Crew Directory
+            </button>
+            <button class="nav-item" data-tab="verified-log" onclick="switchSubTab('manager', 'verified-log')">
+              <i class="fa-solid fa-list-check text-green"></i> Verified Task Log
+            </button>
+          </nav>
+
+          <!-- 3. FIELD WORKER MENU -->
+          <nav id="worker-nav-group" class="role-nav-group" style="display: none;">
+            <div class="sidebar-nav-title">Worker Views</div>
+            <button class="nav-item active" data-tab="my-tasks" onclick="switchSubTab('worker', 'my-tasks')">
+              <i class="fa-solid fa-clipboard-list text-amber"></i> My Field Tasks
+            </button>
+            <button class="nav-item" data-tab="report-issue" onclick="openModal('problem-modal')">
+              <i class="fa-solid fa-triangle-exclamation text-red"></i> Report Emergency
+            </button>
+          </nav>
+
+          <!-- 4. FARM OWNER MENU -->
+          <nav id="owner-nav-group" class="role-nav-group" style="display: none;">
+            <div class="sidebar-nav-title">Owner Views</div>
+            <button class="nav-item active" data-tab="executive-dashboard" onclick="switchSubTab('owner', 'executive-dashboard')">
+              <i class="fa-solid fa-chart-line text-purple"></i> Executive Dashboard
+            </button>
+            <button class="nav-item" data-tab="digital-timeline" onclick="switchSubTab('owner', 'digital-timeline')">
+              <i class="fa-solid fa-timeline text-purple"></i> Audit Timeline
+            </button>
+            <button class="nav-item" data-tab="weekly-report" onclick="openModal('report-modal')">
+              <i class="fa-solid fa-file-pdf text-purple"></i> Weekly Reports
+            </button>
+          </nav>
+
+        </div>
+      </div>
+
+      <!-- Base Account Profile Card anchored at sidebar bottom -->
+      <div class="sidebar-base">
+        <div class="user-avatar" id="sidebar-user-avatar">
+          <i class="fa-solid fa-user-doctor"></i>
+        </div>
+        <div class="user-details">
+          <div class="user-name" id="sidebar-user-name">Dr. Lobos</div>
+          <div class="user-role" id="sidebar-user-role">Head Agronomist</div>
+        </div>
+        <div class="status-indicator" title="Connected"></div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Area -->
+    <main class="app-workspace">
+
+      <!-- Top Welcome Header Bar -->
+      <header class="workspace-header">
+        <div>
+          <h1 class="welcome-title" id="welcome-title">Welcome back, Dr. Lobos!</h1>
+          <p class="welcome-sub" id="welcome-sub">Multi-Farm Agronomic Command Center — John's Tomato Farm (Dodowa)</p>
+        </div>
+      </header>
+
+      <!-- Workspace Content Area -->
+      <div class="workspace-content">
+
+        <!-- AGRONOMIST VIEW -->
+        <div id="agronomist-view" class="role-section">
+          <!-- Command Center Sub-Tab -->
+          <div id="agronomist-command-center" class="sub-tab-content">
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <i class="fa-solid fa-user-doctor text-green"></i> Multi-Farm Agronomic Command Center
+                </div>
+                <div style="display: flex; gap: 8px;">
+                  <button class="btn btn-secondary" onclick="openModal('inspection-modal')">
+                    <i class="fa-solid fa-clipboard-question"></i> Log Farm Inspection
+                  </button>
+                  <button class="btn" onclick="openModal('protocol-modal')">
+                    <i class="fa-solid fa-plus"></i> Create Protocol
+                  </button>
+                </div>
+              </div>
+
+              <div class="grid-4" id="agronomist-summary-grid">
+                <div class="card">
+                  <div style="font-size: 11px; color: #a7f3d0; font-weight: 700;">Active Farms Managed</div>
+                  <div style="font-size: 26px; font-weight: 900; margin-top: 2px;" id="stat-farms">2</div>
+                  <div style="font-size: 10px; color: #d1d5db;" id="stat-farms-breakdown">1 Healthy · 1 Attention</div>
+                </div>
+                <div class="card">
+                  <div style="font-size: 11px; color: #a7f3d0; font-weight: 700;">Protocol Library</div>
+                  <div style="font-size: 26px; font-weight: 900; margin-top: 2px;" id="stat-protocols">4</div>
+                  <div style="font-size: 10px; color: #34d399;">Standardized Playbooks</div>
+                </div>
+                <div class="card">
+                  <div style="font-size: 11px; color: #a7f3d0; font-weight: 700;">Active Dispatched Tasks</div>
+                  <div style="font-size: 26px; font-weight: 900; margin-top: 2px;" id="stat-tasks">3</div>
+                  <div style="font-size: 10px; color: #fde68a;" id="stat-tasks-breakdown">1 Pending Proof · 1 Scheduled</div>
+                </div>
+                <div class="card">
+                  <div style="font-size: 11px; color: #a7f3d0; font-weight: 700;">Inspections Completed</div>
+                  <div style="font-size: 26px; font-weight: 900; margin-top: 2px;" id="stat-inspections">2</div>
+                  <div style="font-size: 10px; color: #c084fc;">1-5 Star Ratings Logged</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Multi-Farm Vigor Directory -->
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <i class="fa-solid fa-wheat-field text-green"></i> Managed Farms Health & Acreage Directory
+                </div>
+              </div>
+              <div class="grid-2">
+                <div class="card">
+                  <div class="card-header">
+                    <div>
+                      <span class="badge badge-amber">Attention Needed</span>
+                      <div class="card-title" style="margin-top: 4px;">John's Tomato Farm</div>
+                      <div style="font-size: 11px; color: #a7f3d0;"><i class="fa-solid fa-location-dot"></i> Dodowa, Greater Accra</div>
+                    </div>
+                  </div>
+                  <div style="font-size: 11.5px; line-height: 1.6; color: #e5e7eb; margin: 8px 0;">
+                    <div><strong>Size:</strong> 2.5 Acres · 8,000 Plants</div>
+                    <div><strong>Crop:</strong> Fresh Market Tomato (Ananya F1)</div>
+                    <div><strong>Manager:</strong> Kwame Mensah</div>
+                    <div><strong>Agronomic Note:</strong> Plot C potassium drawdown during fruit sizing stage.</div>
+                  </div>
+                  <button class="btn btn-secondary" style="font-size: 11px; width: 100%; justify-content: center;" onclick="switchSubTab('agronomist', 'plot-chemistry')">
+                    Inspect Soil & Plot Metrics →
+                  </button>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                    <div>
+                      <span class="badge badge-green">Healthy Vigor</span>
+                      <div class="card-title" style="margin-top: 4px;">Volta Basin Organic Farm</div>
+                      <div style="font-size: 11px; color: #a7f3d0;"><i class="fa-solid fa-location-dot"></i> Ada Foah, Volta Region</div>
+                    </div>
+                  </div>
+                  <div style="font-size: 11.5px; line-height: 1.6; color: #e5e7eb; margin: 8px 0;">
+                    <div><strong>Size:</strong> 4.0 Acres · 12,000 Plants</div>
+                    <div><strong>Crop:</strong> Habanero Pepper & Sweet Bell</div>
+                    <div><strong>Manager:</strong> Emmanuel Tetteh</div>
+                    <div><strong>Agronomic Note:</strong> Vegetative growth index optimal. Drip lines running smoothly.</div>
+                  </div>
+                  <button class="btn btn-secondary" style="font-size: 11px; width: 100%; justify-content: center;" onclick="switchSubTab('agronomist', 'protocol-library')">
+                    View Assigned Protocols →
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Plot Chemistry Sub-Tab -->
+          <div id="agronomist-plot-chemistry" class="sub-tab-content" style="display: none;">
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <i class="fa-solid fa-layer-group text-green"></i> Plot Chemistry & Lifecycle Tracker — John's Tomato Farm
+                </div>
+                <select id="farm-selector" style="width: auto; margin: 0; padding: 4px 10px; font-size: 11px;" onchange="loadFarmPlots(this.value)">
+                  <option value="f-1">John's Tomato Farm (Dodowa)</option>
+                  <option value="f-2">Volta Basin Organic Farm (Ada)</option>
+                </select>
+              </div>
+
+              <div class="grid-4" id="plots-container"></div>
+            </div>
+          </div>
+
+          <!-- Protocol Library Sub-Tab -->
+          <div id="agronomist-protocol-library" class="sub-tab-content" style="display: none;">
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <i class="fa-solid fa-book-bookmark text-green"></i> Standardized Protocol Playbook Library
+                </div>
+                <button class="btn" onclick="openModal('protocol-modal')">
+                  <i class="fa-solid fa-plus"></i> Create Protocol
+                </button>
+              </div>
+
+              <div class="grid-2" id="protocols-container"></div>
+            </div>
+          </div>
+
+          <!-- Inspection Reports Sub-Tab -->
+          <div id="agronomist-inspections" class="sub-tab-content" style="display: none;">
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <i class="fa-solid fa-clipboard-check text-green"></i> Farm Inspection Audit Log
+                </div>
+                <button class="btn btn-secondary" onclick="openModal('inspection-modal')">
+                  <i class="fa-solid fa-clipboard-question"></i> Log Farm Inspection
+                </button>
+              </div>
+              <div id="inspections-container" style="display: flex; flex-direction: column; gap: 12px;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FARM MANAGER VIEW -->
+        <div id="manager-view" class="role-section" style="display: none;">
+          <!-- Command Console Sub-Tab -->
+          <div id="manager-command-console" class="sub-tab-content">
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <i class="fa-solid fa-user-tie text-blue"></i> Farm Manager Command Console — Kwame Mensah
+                </div>
+                <span style="font-size: 11px; color: #bfdbfe;"><i class="fa-solid fa-location-dot"></i> John's Tomato Farm (Dodowa)</span>
+              </div>
+
+              <div class="grid-4">
+                <div class="card">
+                  <div style="font-size: 11px; color: #93c5fd; font-weight: 700;">Pending Photo Audits</div>
+                  <div style="font-size: 26px; font-weight: 900; margin-top: 2px; color: #fde68a;" id="mgr-stat-pending">1</div>
+                  <div style="font-size: 10px; color: #d1d5db;">Awaiting Verification</div>
+                </div>
+
+                <div class="card">
+                  <div style="font-size: 11px; color: #93c5fd; font-weight: 700;">Verified Tasks Today</div>
+                  <div style="font-size: 26px; font-weight: 900; margin-top: 2px; color: #6ee7b7;" id="mgr-stat-verified">1</div>
+                  <div style="font-size: 10px; color: #34d399;">Audit Records Posted</div>
+                </div>
+
+                <div class="card">
+                  <div style="font-size: 11px; color: #93c5fd; font-weight: 700;">Ground Crew Active</div>
+                  <div style="font-size: 26px; font-weight: 900; margin-top: 2px;" id="mgr-stat-workers">4</div>
+                  <div style="font-size: 10px; color: #6ee7b7;">3 Active On Field</div>
+                </div>
+
+                <div class="card">
+                  <div style="font-size: 11px; color: #93c5fd; font-weight: 700;">Active Field Alerts</div>
+                  <div style="font-size: 26px; font-weight: 900; margin-top: 2px; color: #fca5a5;" id="mgr-stat-alerts">2</div>
+                  <div style="font-size: 10px; color: #ef4444;">Requires Manager Triage</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Daily Shift Execution Target Board -->
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <i class="fa-solid fa-list-check text-blue"></i> Daily Operations Shift Execution Target Board
+                </div>
+              </div>
+              <div class="grid-3">
+                <div class="card">
+                  <div class="card-header">
+                    <span class="badge badge-green">Morning Shift (07:00 - 12:00)</span>
+                  </div>
+                  <div style="font-size: 12px; line-height: 1.6; color: #e5e7eb;">
+                    <div><i class="fa-solid fa-check text-green"></i> Fertigation Injection (Plot B): <strong>Completed</strong></div>
+                    <div><i class="fa-solid fa-check text-green"></i> Line Flush (Plot A): <strong>Completed</strong></div>
+                    <div><i class="fa-solid fa-spinner text-amber"></i> Pest Sticky Trap Scout (Plot C): <strong>In Progress</strong></div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                    <span class="badge badge-amber">Afternoon Shift (12:00 - 17:00)</span>
+                  </div>
+                  <div style="font-size: 12px; line-height: 1.6; color: #e5e7eb;">
+                    <div><i class="fa-solid fa-clock text-amber"></i> Nursery Tunnel Shade Mesh Check: <strong>Pending</strong></div>
+                    <div><i class="fa-solid fa-clock text-amber"></i> Soil Moisture Probing (Plot A & B): <strong>Scheduled</strong></div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                    <span class="badge badge-blue">Field Security & Equipment</span>
+                  </div>
+                  <div style="font-size: 12px; line-height: 1.6; color: #e5e7eb;">
+                    <div><i class="fa-solid fa-shield text-blue"></i> Drip Line Pump Pressure: <strong>1.7 Bar (Normal)</strong></div>
+                    <div><i class="fa-solid fa-shield text-blue"></i> Venturi Injector Flow: <strong>2.4 L/min</strong></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Emergency Alerts Sub-Tab -->
+          <div id="manager-alerts-triage" class="sub-tab-content" style="display: none;">
+            <div class="panel" style="border-color: rgba(239, 68, 68, 0.4);">
+              <div class="panel-header">
+                <div class="panel-title" style="color: #fca5a5;">
+                  <i class="fa-solid fa-triangle-exclamation text-red"></i> Emergency Field Alerts & Issue Triage
+                </div>
+                <span class="badge badge-red" id="active-alerts-badge">2 Emergencies Active</span>
+              </div>
+
+              <div id="alerts-container" style="display: flex; flex-direction: column; gap: 12px;"></div>
+            </div>
+          </div>
+
+          <!-- Photo Audits Queue Sub-Tab -->
+          <div id="manager-photo-audits" class="sub-tab-content" style="display: none;">
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <i class="fa-solid fa-camera text-blue"></i> Photo Evidence Verification & Audit Queue
+                </div>
+                <div class="badge badge-amber" id="pending-count-badge">1 Pending Audit</div>
+              </div>
+
+              <div class="grid-2" id="verification-container"></div>
+            </div>
+          </div>
+
+          <!-- Ground Crew Directory Sub-Tab -->
+          <div id="manager-ground-crew" class="sub-tab-content" style="display: none;">
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <i class="fa-solid fa-users text-blue"></i> Ground Crew Performance & Assignment Directory
+                </div>
+              </div>
+
+              <table>
+                <thead>
+                  <tr>
+                    <th>Worker Name</th>
+                    <th>Role Title</th>
+                    <th>Tasks Assigned</th>
+                    <th>Tasks Completed</th>
+                    <th>Compliance %</th>
+                    <th>Field Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="workers-body"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Verified Log Sub-Tab -->
+          <div id="manager-verified-log" class="sub-tab-content" style="display: none;">
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <i class="fa-solid fa-list-check text-green"></i> Verified Tasks Audit Log
+                </div>
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Protocol Name</th>
+                    <th>Plot Location</th>
+                    <th>Worker</th>
+                    <th>Quantity Verified</th>
+                    <th>Audit Status</th>
+                  </tr>
+                </thead>
+                <tbody id="verified-tasks-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- FIELD WORKER VIEW -->
+        <div id="worker-view" class="role-section" style="display: none;">
+          <div id="worker-my-tasks" class="sub-tab-content">
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <i class="fa-solid fa-clipboard-list text-amber"></i> My Assigned Field Tasks (Kofi Osei)
+                </div>
+                <button class="btn btn-danger" onclick="openModal('problem-modal')">
+                  <i class="fa-solid fa-triangle-exclamation"></i> Report Issue
+                </button>
+              </div>
+
+              <div id="worker-tasks-container" style="display: flex; flex-direction: column; gap: 16px;"></div>
+            </div>
+
+            <!-- Field Worker Safety & PPE Check Card -->
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <i class="fa-solid fa-shield-halved text-amber"></i> Daily Field Worker Safety & PPE Gear Check
+                </div>
+              </div>
+              <div class="grid-3">
+                <div class="card">
+                  <div style="font-size: 12px; font-weight: 700; color: #a7f3d0;"><i class="fa-solid fa-hand-holding-medical"></i> Chemical & Fertigation PPE</div>
+                  <div style="font-size: 11px; color: #e5e7eb; margin-top: 6px;">
+                    <div>• Heavy Duty Rubber Gloves: <span style="color: #6ee7b7; font-weight: 700;">Verified Ready</span></div>
+                    <div>• Chemical Splash Goggles: <span style="color: #6ee7b7; font-weight: 700;">Verified Ready</span></div>
+                    <div>• Waterproof Field Boots: <span style="color: #6ee7b7; font-weight: 700;">Verified Ready</span></div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div style="font-size: 12px; font-weight: 700; color: #a7f3d0;"><i class="fa-solid fa-mask-face"></i> Spraying & Scouting PPE</div>
+                  <div style="font-size: 11px; color: #e5e7eb; margin-top: 6px;">
+                    <div>• N95 Particulate Respirator: <span style="color: #6ee7b7; font-weight: 700;">Issued</span></div>
+                    <div>• Protective Overalls: <span style="color: #6ee7b7; font-weight: 700;">Issued</span></div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div style="font-size: 12px; font-weight: 700; color: #a7f3d0;"><i class="fa-solid fa-phone"></i> Emergency Field Contacts</div>
+                  <div style="font-size: 11px; color: #e5e7eb; margin-top: 6px;">
+                    <div>• Manager Kwame: <span style="color: #6ee7b7;">+233 24 555 0192</span></div>
+                    <div>• Agronomist Dr. Lobos: <span style="color: #6ee7b7;">+233 20 555 0188</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FARM OWNER VIEW -->
+        <div id="owner-view" class="role-section" style="display: none;">
+          <!-- Executive Dashboard Sub-Tab -->
+          <div id="owner-executive-dashboard" class="sub-tab-content">
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <i class="fa-solid fa-chart-line text-purple"></i> Executive Performance Dashboard
+                </div>
+                <button class="btn" onclick="openModal('report-modal')">
+                  <i class="fa-solid fa-file-pdf"></i> View Weekly Executive Report
+                </button>
+              </div>
+
+              <div class="grid-4">
+                <div class="card">
+                  <div style="font-size: 11px; color: #a7f3d0; font-weight: 700;">Overall Performance</div>
+                  <div style="font-size: 28px; font-weight: 900; margin-top: 4px;">93%</div>
+                  <div style="font-size: 10px; color: #34d399;"><i class="fa-solid fa-check"></i> High Operational Compliance</div>
+                </div>
+                <div class="card">
+                  <div style="font-size: 11px; color: #a7f3d0; font-weight: 700;">Irrigation Compliance</div>
+                  <div style="font-size: 28px; font-weight: 900; margin-top: 4px;">97%</div>
+                  <div style="font-size: 10px; color: #34d399;"><i class="fa-solid fa-droplet"></i> 7 Cycles Completed</div>
+                </div>
+                <div class="card">
+                  <div style="font-size: 11px; color: #a7f3d0; font-weight: 700;">Nutrition Adherence</div>
+                  <div style="font-size: 28px; font-weight: 900; margin-top: 4px;">91%</div>
+                  <div style="font-size: 10px; color: #fde68a;"><i class="fa-solid fa-flask"></i> 2 Applications Done</div>
+                </div>
+                <div class="card">
+                  <div style="font-size: 11px; color: #a7f3d0; font-weight: 700;">Expected Harvest</div>
+                  <div style="font-size: 28px; font-weight: 900; margin-top: 4px;">10,000 kg</div>
+                  <div style="font-size: 10px; color: #c084fc;"><i class="fa-solid fa-basket-shopping"></i> 1,240 kg Picked YTD</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Executive Financial & Harvest ROI Card -->
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <i class="fa-solid fa-sack-dollar text-purple"></i> Financial Efficiency & Harvest Yield Forecast
+                </div>
+              </div>
+              <div class="grid-3">
+                <div class="card">
+                  <div style="font-size: 11px; color: #a7f3d0; font-weight: 700;">Projected Harvest Revenue</div>
+                  <div style="font-size: 26px; font-weight: 900; color: #34d399; margin-top: 4px;">$24,500 EST</div>
+                  <div style="font-size: 10.5px; color: #e5e7eb; margin-top: 6px;">
+                    <div>• Target Price: $2.45 / kg</div>
+                    <div>• Fresh Market Grade A: 88% Output</div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div style="font-size: 11px; color: #a7f3d0; font-weight: 700;">Input ROI & Cost Ratio</div>
+                  <div style="font-size: 26px; font-weight: 900; color: #fde68a; margin-top: 4px;">3.8x ROI</div>
+                  <div style="font-size: 10.5px; color: #e5e7eb; margin-top: 6px;">
+                    <div>• Fertilizer Efficiency Index: 94%</div>
+                    <div>• Labor Cost per Acre: $420</div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div style="font-size: 11px; color: #a7f3d0; font-weight: 700;">Water & Energy Conservation</div>
+                  <div style="font-size: 26px; font-weight: 900; color: #93c5fd; margin-top: 4px;">96% Optimal</div>
+                  <div style="font-size: 10.5px; color: #e5e7eb; margin-top: 6px;">
+                    <div>• Drip Efficiency Rating: 96%</div>
+                    <div>• Pump Fuel Consumption: 14L/week</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Digital Audit Timeline Sub-Tab -->
+          <div id="owner-digital-timeline" class="sub-tab-content" style="display: none;">
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <i class="fa-solid fa-timeline text-purple"></i> Digital Farm Audit Timeline
+                </div>
+              </div>
+              <div id="timeline-container" style="display: flex; flex-direction: column; gap: 12px;"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- MODALS -->
+
+  <div id="reject-modal" class="modal-overlay" style="display: none;">
+    <div class="modal">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+        <h3 style="font-size: 16px; color: #fca5a5;"><i class="fa-solid fa-triangle-exclamation"></i> Reject Work & Request Rework</h3>
+        <button onclick="closeModal('reject-modal')" style="background: none; border: none; color: #fff; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form onsubmit="submitTaskRejection(event)">
+        <input type="hidden" id="reject-task-id" />
+        <label>Reason for Rework / Rejection</label>
+        <textarea id="reject-reason" rows="3" required placeholder="Explain why the evidence was rejected..."></textarea>
+        <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('reject-modal')">Cancel</button>
+          <button type="submit" class="btn btn-danger"><i class="fa-solid fa-rotate-left"></i> Send Back for Rework</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="reassign-modal" class="modal-overlay" style="display: none;">
+    <div class="modal">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+        <h3 style="font-size: 16px;"><i class="fa-solid fa-user-pen"></i> Reassign Task to Worker</h3>
+        <button onclick="closeModal('reassign-modal')" style="background: none; border: none; color: #fff; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form onsubmit="submitWorkerReassign(event)">
+        <input type="hidden" id="reassign-task-id" />
+        <label>Select Target Ground Crew Member</label>
+        <select id="reassign-worker-select">
+          <option value="Kofi Osei">Kofi Osei (Senior Field Hand)</option>
+          <option value="Ama Serwaa">Ama Serwaa (Pest & Disease Scout)</option>
+          <option value="Kwaku Bonsu">Kwaku Bonsu (Irrigation Specialist)</option>
+          <option value="Yaa Asantewaa">Yaa Asantewaa (General Worker)</option>
+        </select>
+        <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('reassign-modal')">Cancel</button>
+          <button type="submit" class="btn"><i class="fa-solid fa-check"></i> Reassign Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="protocol-modal" class="modal-overlay" style="display: none;">
+    <div class="modal" style="max-width: 550px;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+        <h3 style="font-size: 16px;"><i class="fa-solid fa-file-circle-plus"></i> Publish Agronomic Protocol</h3>
+        <button onclick="closeModal('protocol-modal')" style="background: none; border: none; color: #fff; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form onsubmit="submitProtocol(event)">
+        <label>Protocol Title</label>
+        <input type="text" id="prot-name" required placeholder="e.g. Tomato Flowering Calcium & Nitrogen Boost" />
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div>
+            <label>Category</label>
+            <select id="prot-cat">
+              <option value="Nutrition">Nutrition & Fertigation</option>
+              <option value="Pest & Disease">Pest & Disease Control</option>
+              <option value="Irrigation">Irrigation Schedule</option>
+              <option value="Sanitation">Field Sanitation</option>
+            </select>
+          </div>
+          <div>
+            <label>Target Growth Stage</label>
+            <select id="prot-stage">
+              <option value="Nursery">Nursery & Seedlings</option>
+              <option value="Vegetative">Vegetative</option>
+              <option value="Flowering">Flowering</option>
+              <option value="Fruiting">Fruiting & Harvest</option>
+            </select>
+          </div>
+        </div>
+
+        <label>Chemicals / Fertilizers (Comma Separated)</label>
+        <input type="text" id="prot-prod" required placeholder="e.g. Calcium Nitrate, Potassium Nitrate" />
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div>
+            <label>Application Rate</label>
+            <input type="text" id="prot-rate" required placeholder="2.5 kg / 1,000 plants" />
+          </div>
+          <div>
+            <label>Water Volume</label>
+            <input type="text" id="prot-vol" required placeholder="1,200 Liters" />
+          </div>
+        </div>
+
+        <label>Application Method</label>
+        <select id="prot-method">
+          <option value="Drip Fertigation (Venturi Injector)">Drip Fertigation (Venturi Injector)</option>
+          <option value="Foliar Spray">Foliar Spray</option>
+          <option value="Soil Drench">Soil Drench</option>
+          <option value="Granular Topdress">Granular Topdress</option>
+        </select>
+
+        <label>Required Safety Gear (PPE)</label>
+        <input type="text" id="prot-ppe" required value="Rubber Gloves, Safety Goggles, Boots" />
+
+        <label>Step-by-step Instructions</label>
+        <textarea id="prot-inst" rows="3" required placeholder="Flush drip main line for 15 mins..."></textarea>
+
+        <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('protocol-modal')">Cancel</button>
+          <button type="submit" class="btn"><i class="fa-solid fa-check"></i> Publish to Library</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="task-modal" class="modal-overlay" style="display: none;">
+    <div class="modal">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+        <h3 style="font-size: 16px;"><i class="fa-solid fa-paper-plane"></i> Dispatch Task to Plot</h3>
+        <button onclick="closeModal('task-modal')" style="background: none; border: none; color: #fff; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form onsubmit="submitDispatchTask(event)">
+        <input type="hidden" id="task-prot-id" />
+        <label>Selected Protocol</label>
+        <input type="text" id="task-prot-name" readonly style="background: #0d1a12; color: #34d399;" />
+
+        <label>Target Plot Location</label>
+        <select id="task-plot-select">
+          <option value="p-101">Plot A (Vegetative)</option>
+          <option value="p-102">Plot B (Flowering)</option>
+          <option value="p-103">Plot C (Fruiting & Ripening)</option>
+          <option value="p-104">Nursery & High Tunnel</option>
+        </select>
+
+        <label>Assign Ground Worker</label>
+        <select id="task-worker">
+          <option value="Kofi Osei">Kofi Osei (Senior Field Hand)</option>
+          <option value="Ama Serwaa">Ama Serwaa (Pest & Disease Scout)</option>
+          <option value="Kwaku Bonsu">Kwaku Bonsu (Irrigation Specialist)</option>
+          <option value="Yaa Asantewaa">Yaa Asantewaa (General Worker)</option>
+        </select>
+
+        <label>Priority</label>
+        <select id="task-priority">
+          <option value="High">High Priority</option>
+          <option value="Medium">Medium Priority</option>
+          <option value="Low">Low Priority</option>
+        </select>
+
+        <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('task-modal')">Cancel</button>
+          <button type="submit" class="btn"><i class="fa-solid fa-paper-plane"></i> Dispatch Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="inspection-modal" class="modal-overlay" style="display: none;">
+    <div class="modal" style="max-width: 500px;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+        <h3 style="font-size: 16px;"><i class="fa-solid fa-clipboard-question"></i> Record Farm Inspection Log</h3>
+        <button onclick="closeModal('inspection-modal')" style="background: none; border: none; color: #fff; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form onsubmit="submitInspection(event)">
+        <label>Target Plot</label>
+        <select id="insp-plot-select">
+          <option value="p-101">Plot A (Vegetative)</option>
+          <option value="p-102">Plot B (Flowering)</option>
+          <option value="p-103">Plot C (Fruiting & Ripening)</option>
+        </select>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div>
+            <label>Crop Health Rating (1-5)</label>
+            <select id="insp-health">
+              <option value="5">5 ★★★★★ Excellent Vigor</option>
+              <option value="4">4 ★★★★☆ Good</option>
+              <option value="3">3 ★★★☆☆ Fair</option>
+              <option value="2">2 ★★☆☆☆ Needs Attention</option>
+              <option value="1">1 ★☆☆☆☆ Critical</option>
+            </select>
+          </div>
+          <div>
+            <label>Irrigation Rating (1-5)</label>
+            <select id="insp-irr">
+              <option value="5">5 ★★★★★ Optimal Moisture</option>
+              <option value="4">4 ★★★★☆ Adequate</option>
+              <option value="3">3 ★★★☆☆ Slight Stress</option>
+              <option value="2">2 ★★☆☆☆ Dry Lines</option>
+            </select>
+          </div>
+        </div>
+
+        <label>Agronomic Field Observations</label>
+        <textarea id="insp-obs" rows="3" required placeholder="Observed leaf color, flowering cluster density, soil moisture level..."></textarea>
+
+        <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('inspection-modal')">Cancel</button>
+          <button type="submit" class="btn"><i class="fa-solid fa-check"></i> Post Inspection Record</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="edit-plot-modal" class="modal-overlay" style="display: none;">
+    <div class="modal">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+        <h3 style="font-size: 16px;"><i class="fa-solid fa-flask"></i> Update Soil & Lifecycle Metrics</h3>
+        <button onclick="closeModal('edit-plot-modal')" style="background: none; border: none; color: #fff; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form onsubmit="submitPlotMetrics(event)">
+        <input type="hidden" id="edit-plot-id" />
+        <label>Plot Name</label>
+        <input type="text" id="edit-plot-name" readonly style="background: #0d1a12;" />
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div>
+            <label>Growth Stage</label>
+            <select id="edit-plot-stage">
+              <option value="Vegetative">Vegetative</option>
+              <option value="Flowering">Flowering</option>
+              <option value="Fruiting">Fruiting</option>
+            </select>
+          </div>
+          <div>
+            <label>Growth Week</label>
+            <input type="number" id="edit-plot-week" min="1" max="52" />
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+          <div>
+            <label>Soil pH</label>
+            <input type="number" step="0.1" id="edit-plot-ph" />
+          </div>
+          <div>
+            <label>Nitrogen (PPM)</label>
+            <input type="number" id="edit-plot-n" />
+          </div>
+          <div>
+            <label>Moisture %</label>
+            <input type="number" id="edit-plot-moisture" />
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('edit-plot-modal')">Cancel</button>
+          <button type="submit" class="btn"><i class="fa-solid fa-check"></i> Save Soil Metrics</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="evidence-modal" class="modal-overlay" style="display: none;">
+    <div class="modal">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+        <h3 style="font-size: 16px;"><i class="fa-solid fa-camera"></i> Upload Photo Evidence</h3>
+        <button onclick="closeModal('evidence-modal')" style="background: none; border: none; color: #fff; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form onsubmit="submitEvidence(event)">
+        <input type="hidden" id="evidence-task-id" />
+        
+        <label>Photo Proof Preview</label>
+        <img id="evidence-img-preview" src="https://images.unsplash.com/photo-1592417817098-8f3d6eb247a5?w=500&q=80" class="img-preview" alt="Fertigation Proof" />
+        
+        <label>Quantity / Water Applied</label>
+        <input type="text" id="evidence-qty" required value="1,200 Liters fertigation completed" />
+
+        <label>Field Notes & Observations</label>
+        <textarea id="evidence-notes" rows="2" placeholder="Flushed lines for 15 mins. Injector ran cleanly."></textarea>
+
+        <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('evidence-modal')">Cancel</button>
+          <button type="submit" class="btn"><i class="fa-solid fa-upload"></i> Submit Proof for Verification</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="problem-modal" class="modal-overlay" style="display: none;">
+    <div class="modal">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+        <h3 style="font-size: 16px; color: #fca5a5;"><i class="fa-solid fa-triangle-exclamation"></i> Report Emergency Farm Problem</h3>
+        <button onclick="closeModal('problem-modal')" style="background: none; border: none; color: #fff; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form onsubmit="submitProblem(event)">
+        <label>Plot Location</label>
+        <select id="prob-plot">
+          <option value="Plot A (Vegetative)">Plot A (Vegetative)</option>
+          <option value="Plot B (Flowering)">Plot B (Flowering)</option>
+          <option value="Plot C (Fruiting & Ripening)">Plot C (Fruiting & Ripening)</option>
+        </select>
+
+        <label>Issue Description</label>
+        <textarea id="prob-desc" rows="3" required placeholder="Describe issue (e.g. Drip line burst, pest cluster, pressure drop...)"></textarea>
+
+        <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('problem-modal')">Cancel</button>
+          <button type="submit" class="btn btn-danger"><i class="fa-solid fa-paper-plane"></i> Dispatch Alert to Manager</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="report-modal" class="modal-overlay" style="display: none;">
+    <div class="modal" style="max-width: 600px;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+        <h3 style="font-size: 16px;"><i class="fa-solid fa-file-lines"></i> WEEKLY FARM REPORT — John's Tomato Farm</h3>
+        <button onclick="closeModal('report-modal')" style="background: none; border: none; color: #fff; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div style="font-size: 12px; line-height: 1.6;">
+        <p><strong>Week:</strong> Sept 28 – Oct 4, 2026</p>
+        <p><strong>Compliance Score:</strong> <span style="color: #6ee7b7; font-weight: 700;">93% High Operational Integrity</span></p>
+        <hr style="border-color: rgba(52,211,153,0.2); margin: 10px 0;" />
+        <p><strong>Tasks Completed:</strong> 96 / 103 Dispatched</p>
+        <p><strong>Irrigation Cycles:</strong> 7 Completed</p>
+        <p><strong>Fertilizer Applications:</strong> 2 Completed</p>
+        <p><strong>Harvest Output:</strong> 1,240 kg Fresh Tomatoes</p>
+        <hr style="border-color: rgba(52,211,153,0.2); margin: 10px 0;" />
+        <p style="color: #fde68a;"><strong>Head Agronomist Remarks:</strong></p>
+        <p style="color: #9ca3af; font-style: italic;">"Crop growth and vegetative vigor remain satisfactory across Plot A and Nursery. Plot C fruiting stage is progressing as scheduled."</p>
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px;">
+        <button class="btn btn-secondary" onclick="closeModal('report-modal')">Close</button>
+        <button class="btn" onclick="alert('Downloading PDF Report...')"><i class="fa-solid fa-download"></i> Download PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

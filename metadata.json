@@ -1,6 +1,0 @@
-{
-  "name": "AgriPulse Farm Manager",
-  "description": "Comprehensive farm management app featuring inventory tracking, crop rotation schedules, expense logging, yield analytics, and smart farming insights.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
